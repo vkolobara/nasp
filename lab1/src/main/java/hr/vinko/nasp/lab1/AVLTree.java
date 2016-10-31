@@ -2,6 +2,31 @@ package hr.vinko.nasp.lab1;
 
 public class AVLTree {
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((root == null) ? 0 : root.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AVLTree other = (AVLTree) obj;
+		if (root == null) {
+			if (other.root != null)
+				return false;
+		} else if (!root.equals(other.root))
+			return false;
+		return true;
+	}
+
 	private AVLNode root;
 
 	public static int balanceFactor(AVLNode node) {
@@ -76,8 +101,10 @@ public class AVLTree {
 					}
 				} else {
 					AVLNode temp = getMax(node.left);
+					AVLNode parent = temp.parent;
 					node.element = temp.element;
 					deleteElement(temp.element, node.left);
+					balance(parent);
 				}
 				
 				
@@ -97,54 +124,25 @@ public class AVLTree {
 		
 		int frParent = balanceFactor(startNode);
 		if (Math.abs(frParent) == 2) {
-			int frChildL = balanceFactor(startNode.left);
-			int frChildR = balanceFactor(startNode.right);
 			if (frParent == 2) {
+				int frChildR = balanceFactor(startNode.right);
 				if (frChildR >= 0) {
 					rotateLeft(startNode.right);
 				} else {
 					rotateRightLeft(startNode.right);
 				}
 			} else {
+				int frChildL = balanceFactor(startNode.left);
 				if (frChildL <= 0) {
 					rotateRight(startNode.left);
 				} else {
 					rotateLeftRight(startNode.left);
 				}
 			}
-		} else {
-			balance(startNode.parent);
 		}
+		
+		balance(startNode.parent);
 	}
-	
-//	private void balance(AVLNode startNode) {
-//		if (startNode == null)
-//			return;
-//
-//		int frParent = balanceFactor(startNode.parent);
-//		if (frParent != 0) System.out.println("Parent " + startNode.parent.element + "," + frParent);
-//		// if (frParent == 0) return;
-//		if (Math.abs(frParent) > 1) {
-//			int frChild = balanceFactor(startNode);
-//			System.out.println("Child " + startNode.element + "," + frChild);
-//			if (frParent == 2) {
-//				if (frChild >= 0) {
-//					rotateLeft(startNode);
-//				} else {
-//					rotateRightLeft(startNode);
-//				}
-//			} else {
-//				if (frChild <= 0) {
-//					rotateRight(startNode);
-//				} else {
-//					rotateLeftRight(startNode);
-//				}
-//			}
-//		} else {
-//			balance(startNode.parent);
-//		}
-//
-//	}
 
 	private void rotateLeft(AVLNode node) {
 		AVLNode parent = node.parent;
@@ -228,12 +226,14 @@ public class AVLTree {
 	}
 
 	public String prettyString() {
+		if (root == null) return "└──";
 		return root.prettyString();
 	}
 	
 	@Override
 	public String toString() {
-		return root.toString();
+		if (root == null) return "[]";
+		return "[" + root.toString() + "]";
 	}
 
 	public static class AVLNode {

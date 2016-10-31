@@ -20,6 +20,7 @@ public class Main {
 		System.out.println(numbers);
 		numbers.forEach(num -> tree.addElement(num));
 	
+		
 
 		try (Scanner sc = new Scanner(System.in)) {
 			while (true) {
