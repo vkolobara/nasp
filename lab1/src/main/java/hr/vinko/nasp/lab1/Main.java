@@ -20,8 +20,7 @@ public class Main {
 		System.out.println(numbers);
 		numbers.forEach(num -> tree.addElement(num));
 	
-		
-
+	
 		try (Scanner sc = new Scanner(System.in)) {
 			while (true) {
 				System.out.println();
@@ -29,9 +28,13 @@ public class Main {
 				System.out.print("Commands: \nadd x (Adds element)\ndel x (Deletes element)\nexit\n>");
 				String input = sc.nextLine();
 				if (input.startsWith("add")) {
-					tree.addElement(Integer.parseInt(input.split("\\s")[1]));
+					try {
+						tree.addElement(Integer.parseInt(input.split("\\s")[1]));						
+					} catch (Exception ignorable){}
 				} else if (input.startsWith("del")) {
-					tree.deleteElement(Integer.parseInt(input.split("\\s")[1]));
+					try {
+						tree.deleteElement(Integer.parseInt(input.split("\\s")[1]));						
+					} catch (Exception ignorable){}
 				} else if (input.startsWith("exit")) {
 					System.out.println("Goodbye!");
 					break;

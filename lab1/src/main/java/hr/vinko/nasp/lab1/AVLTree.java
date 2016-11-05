@@ -59,7 +59,7 @@ public class AVLTree {
 		return this;
 	}
 
-	public void deleteElement(int element, AVLNode node) {
+	private void deleteElement(int element, AVLNode node) {
 		if (node != null) {
 			if (element < node.element) {
 				deleteElement(element, node.left);
@@ -69,31 +69,31 @@ public class AVLTree {
 				if (node.left == null || node.right == null) {
 					AVLNode temp = node.left == null ? node.right : node.left;
 					if (temp == null) {
-						//Ovdje je list
+						// Ovdje je list
 						if (node.parent != null) {
 							AVLNode parent = node.parent;
 							if (node.equals(node.parent.right)) {
 								node.parent.right = null;
-							} else{
+							} else {
 								node.parent.left = null;
-							} 
+							}
 							balance(parent);
 						} else {
 							root = null;
 						}
 						node = null;
 					} else {
-						//Ovdje je samo jedno dijete
+						// Ovdje je samo jedno dijete
 						if (node.parent != null) {
 							temp.parent = node.parent;
 							if (node.equals(node.parent.left)) {
 								node.parent.left = temp;
-							} else if (node.equals(node.parent.right)){
+							} else if (node.equals(node.parent.right)) {
 								node.parent.right = temp;
 							}
 							balance(node.parent);
 						} else {
-							//Brisem root
+							// Brisem root
 							temp.parent = null;
 							root = temp;
 						}
@@ -101,15 +101,13 @@ public class AVLTree {
 					}
 				} else {
 					AVLNode temp = getMax(node.left);
-					AVLNode parent = temp.parent;
 					node.element = temp.element;
 					deleteElement(temp.element, node.left);
-					balance(parent);
+					//balance(parent);
 				}
-				
-				
+
 			}
-		}	
+		}
 	}
 
 	private AVLNode getMax(AVLNode node) {
@@ -119,28 +117,35 @@ public class AVLTree {
 		return getMax(node.right);
 	}
 
+	private AVLNode getMin(AVLNode node) {
+		if (node.left == null) {
+			return node;
+		}
+		return getMin(node.left);
+	}
+
 	private void balance(AVLNode startNode) {
-		if (startNode == null) return;
-		
+		if (startNode == null)
+			return;
+
 		int frParent = balanceFactor(startNode);
-		if (Math.abs(frParent) == 2) {
-			if (frParent == 2) {
-				int frChildR = balanceFactor(startNode.right);
-				if (frChildR >= 0) {
-					rotateLeft(startNode.right);
-				} else {
-					rotateRightLeft(startNode.right);
-				}
+		
+		if (frParent == 2) {
+			int frChildR = balanceFactor(startNode.right);
+			if (frChildR >= 0) {
+				rotateLeft(startNode.right);
 			} else {
-				int frChildL = balanceFactor(startNode.left);
-				if (frChildL <= 0) {
-					rotateRight(startNode.left);
-				} else {
-					rotateLeftRight(startNode.left);
-				}
+				rotateRightLeft(startNode.right);
+			}
+		} else if (frParent == -2) {
+			int frChildL = balanceFactor(startNode.left);
+			if (frChildL <= 0) {
+				rotateRight(startNode.left);
+			} else {
+				rotateLeftRight(startNode.left);
 			}
 		}
-		
+				
 		balance(startNode.parent);
 	}
 
@@ -226,17 +231,19 @@ public class AVLTree {
 	}
 
 	public String prettyString() {
-		if (root == null) return "└──";
+		if (root == null)
+			return "└──";
 		return root.prettyString();
 	}
-	
+
 	@Override
 	public String toString() {
-		if (root == null) return "[]";
+		if (root == null)
+			return "[]";
 		return "[" + root.toString() + "]";
 	}
 
-	public static class AVLNode {
+	public class AVLNode {
 		int element;
 		AVLNode parent;
 		AVLNode left;
@@ -256,17 +263,17 @@ public class AVLTree {
 		public String prettyString() {
 			return this.toString(new StringBuilder(), true, new StringBuilder()).toString();
 		}
-		
+
 		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 			if (left != null) {
 				sb.append(left);
 			}
-			
+
 			sb.append(element);
-			
-			if (right != null) { 
+
+			if (right != null) {
 				sb.append(right);
 			}
 			return sb.toString();
