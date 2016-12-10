@@ -6,13 +6,13 @@ import java.util.Arrays;
 import hr.vinko.nasp.lab2.algorithm.GeneticAlgorithm;
 import hr.vinko.nasp.lab2.fitness.FitnessFunction;
 import hr.vinko.nasp.lab2.operator.GreedyCrossover;
-import hr.vinko.nasp.lab2.operator.SwapMutation;
 import hr.vinko.nasp.lab2.operator.ICrossover;
 import hr.vinko.nasp.lab2.operator.IMutation;
 import hr.vinko.nasp.lab2.operator.ISelection;
 import hr.vinko.nasp.lab2.operator.PMXCrossover;
 import hr.vinko.nasp.lab2.operator.PermutationMutation;
 import hr.vinko.nasp.lab2.operator.ShuffleMutation;
+import hr.vinko.nasp.lab2.operator.SwapMutation;
 import hr.vinko.nasp.lab2.operator.TournamentSelection;
 import hr.vinko.nasp.lab2.solution.PermutationVector;
 import hr.vinko.nasp.lab2.tsp.ProblemDefinition;
@@ -20,13 +20,18 @@ import hr.vinko.nasp.lab2.tsp.ProblemDefinition;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		double pC = 0.8;
+		
+		if (args.length != 1) {
+			throw new IllegalArgumentException("Potrebno predati putanju do datoteke kao argument!");
+		}
+		
+		double pC = 0.9;
 		double pM = 0.1;
 		int k = 3;
 		int popSize = 50;
 		int maxIter = 100_000;
 		
-		ProblemDefinition problem = new ProblemDefinition("tsp/pr2392.tsp");
+		ProblemDefinition problem = new ProblemDefinition(args[0]);
 		
 		FitnessFunction fitness = new FitnessFunction(x -> {
 			double sum = 0;
